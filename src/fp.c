@@ -163,7 +163,7 @@ fpNumber fpChangePrecision(fpNumber num, int precision){
 
 // Return 1 if abs(num1) is bigger than abs(num2), 0 if equal, -1 otherwise
 int fpIsBiggerAbs(fpNumber num1, fpNumber num2){
-  
+
   if (num1.exponent  >  num2.exponent) return  1;
   if (num1.exponent  <  num2.exponent) return -1;
   if (num1.mantissa1 > num2.mantissa1) return  1;
@@ -189,6 +189,8 @@ int fpIsBigger(fpNumber num1, fpNumber num2) {
     return 1;
   else if ((num1.isNegative == 1) && (num2.isNegative == 1))
     return -1*fpIsBiggerAbs(num1, num2);
+
+  return 0; // should never be called
 
 }
 
@@ -238,7 +240,7 @@ fpNumber fpSum(fpNumber num1, fpNumber num2, int precision) {
     fpNumber sup, inf;
     if (fpIsBiggerAbs(num1,num2)==-1)     { sup = num2; inf = num1; }
     else if (fpIsBiggerAbs(num1,num2)==1) { sup = num1; inf = num2; }
-    else if (fpIsBiggerAbs(num1,num2)==0) { res = num1; res.exponent++; 
+    else if (fpIsBiggerAbs(num1,num2)==0) { res = num1; res.exponent++;
                                           return res; }
 
     res.exponent = sup.exponent;
@@ -299,7 +301,7 @@ fpNumber fpSum(fpNumber num1, fpNumber num2, int precision) {
       mantissa1 -= powerful;
     }
     res.mantissa1 = (unsigned int)(mantissa1);
-  
+
     // left shift if needed
     carry = msb_inf + msb_sup + carry;
     if (carry>1) {
@@ -317,7 +319,7 @@ fpNumber fpSum(fpNumber num1, fpNumber num2, int precision) {
   }
   // case 2: the two numbers have different signs - subtraction
   else {
-    
+
     fpNumber sup, inf;
     if (fpIsBiggerAbs(num1,num2)==-1)     { sup = num2; inf = num1; }
     else if (fpIsBiggerAbs(num1,num2)==1) { sup = num1; inf = num2; }
@@ -338,7 +340,7 @@ fpNumber fpSum(fpNumber num1, fpNumber num2, int precision) {
       msb_inf = 0;
       inf.exponent ++;
     }
-    
+
     int lending = 0;
     int futurelending = 0;
     unsigned long long powerful = pow(2,INTEGER_DIMENSION);
@@ -392,7 +394,7 @@ fpNumber fpSum(fpNumber num1, fpNumber num2, int precision) {
     lending = msb_sup - msb_inf - lending;
     if (lending!=1) {
      while(lending==0) {
-       if (res.mantissa1>=powertest) { 
+       if (res.mantissa1>=powertest) {
          lending = 1;
          res.mantissa1 -= powertest;
        }
@@ -412,7 +414,7 @@ fpNumber fpSum(fpNumber num1, fpNumber num2, int precision) {
 
 }
 
-// Return a number which is num1-num2 of the two at the given precision 
+// Return a number which is num1-num2 of the two at the given precision
 fpNumber fpSubtract(fpNumber num1, fpNumber num2, int precision) {
   num2.isNegative = !num2.isNegative;
   return fpSum(num1,num2,precision);
@@ -449,7 +451,7 @@ fpNumber fpProduct(fpNumber num1, fpNumber num2, int precision) {
       (num1.mantissa4 == 0) &&
       (num1.exponent  == 0)) {
         if (num1.isNegative==0) return fpChangePrecision(num2,precision);
-	else { 
+	else {
 	  num2.isNegative = !num2.isNegative;
 	  return fpChangePrecision(num2,precision);
 	}
@@ -462,9 +464,9 @@ fpNumber fpProduct(fpNumber num1, fpNumber num2, int precision) {
       (num2.mantissa4 == 0) &&
       (num2.exponent  == 0)) {
         if (num2.isNegative==0) return fpChangePrecision(num1,precision);
-	else { 
-	  num1.isNegative = !num1.isNegative; 
-	  return fpChangePrecision(num1,precision); 
+	else {
+	  num1.isNegative = !num1.isNegative;
+	  return fpChangePrecision(num1,precision);
 	}
   }
 
@@ -498,7 +500,7 @@ fpNumber fpProduct(fpNumber num1, fpNumber num2, int precision) {
       if (helper[iterator]>=powertest) {
         res = fpSum(res, partial, precision);
       }
-      helper[iterator] <<= 1; 
+      helper[iterator] <<= 1;
     }
   }
 
